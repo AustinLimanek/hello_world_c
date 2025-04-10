@@ -103,6 +103,5 @@ int main(void) {
     insertSort(unsorted, 3);
     printArray(unsorted, 3);
     
-    
     return 0;
 }
