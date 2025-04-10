@@ -14,9 +14,6 @@ void addOne (int *p){
 }
 
 void insertSort(int *arr, int size){
-    if (size < 2){
-        return;
-    };
     int i;
     for(i = 1; i < size; i++){
         // we are comparing to a key that is held in the right hand
@@ -96,12 +93,19 @@ int main(void) {
     
     double array[7] = {second, minute, hour, day, month, year, century};
     
-    int unsorted[3] = {7, 3, 4};
+    int unsorted[6] = {5, 2, 4, 6, 1, 3};
+    int length = 6;
     
+    printArray(unsorted, length);
+    insertSort(unsorted, length);
+    printArray(unsorted, length);
     
-    printArray(unsorted, 3);
-    insertSort(unsorted, 3);
-    printArray(unsorted, 3);
+    int unsortedSmall[1] = {5};
+    int lengthShort = 1;
+    
+    printArray(unsortedSmall, lengthShort);
+    insertSort(unsortedSmall, lengthShort);
+    printArray(unsortedSmall, lengthShort);
     
     return 0;
 }
