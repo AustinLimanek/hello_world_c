@@ -7,6 +7,10 @@
 
 #include <stdio.h>
 #include <math.h>
+// this is required for malloc to be called in the program
+#include <stdlib.h>
+// for using strcpy
+#include <string.h>
 
 // int main(int argc, const char * argv[]) {
 void addOne (int *p){
@@ -36,11 +40,68 @@ void insertSort(int *arr, int size){
     
 }
 
+void selectionSort(int *arr, int size){
+    // the value of the alloted memory in the stack is being allocated but not filled int with a value until it is "initialized". What is the proper definition of initialzied in c? Initialization is the process of setting the variable to a given set of bits. Initially this bits are whatever they were before. 
+    int i;
+    
+    
+}
+
+// does the function need to call an array? Or can it just be the lower bound and the upper bound?
+void mergeSort(int *arr, int size, int left, int right){
+    if(left == right){
+        return;
+    };
+    
+    int middle = left + (right - left) / 2;
+    
+    mergeSort(arr, size, left, middle);
+    mergeSort(arr, size, middle + 1, right);
+    
+    int first = left;
+    int second = middle + 1;
+    
+    while(first <= middle || second <= right){
+        if(arr[first] < arr[second]){
+            
+        }
+    }
+    
+}
+
 void printArray(int *arr, int size){
     int i;
     for(i = 0; i < size; i = i + 1){
         printf("%d\n", arr[i]);
     }
+}
+
+struct Node{
+    char *value;
+    struct Node *next;
+};
+
+// typedef is defining "struct Node *" as List. So List is a pointer.
+typedef struct Node * List;
+
+// Function that returns a List type with value NULL.
+List ListNew(void){
+    return NULL;
+};
+
+// this function adds a new node to the front of the list.
+List listAdd(List list, char *string){
+    struct Node *node = (struct Node *) malloc (sizeof(struct Node));
+    node -> value = (char *) malloc (strlen(string) + 1);
+    strcpy(node -> value, string);
+    node -> next = list;
+    return node;
+}
+
+int *getAddress(void){
+    int y;
+    y = 3;
+    return &y;
 }
 
 int main(void) {
@@ -106,6 +167,62 @@ int main(void) {
     printArray(unsortedSmall, lengthShort);
     insertSort(unsortedSmall, lengthShort);
     printArray(unsortedSmall, lengthShort);
+    
+    printf("%lu\tbytes\twhich is %lu bits\n", sizeof(int), sizeof(int) * 8);
+    
+    int stack = 42;
+    int *stackPtr = &stack;
+    printf("%p address of the stackPtr pointer\n", &stackPtr); // memory address in the stack of the pointer which is defined after stack. So the memory location is lower by 8 what?
+    printf("%p address of the stack variable\n", stackPtr);   // memory address on the stack slightly higher because the address of stack was defined first to higher in memory. As in was put in the stack first.
+    printf("%d\n", *stackPtr); // should be 42
+    // what does the value of 8 represent in the difference in the address? Is it 8 bits?
+    printf("%lu bytes for a int pointer\n", sizeof(int *));
+    // pointer takes up 8 bytes for an int pointer? In a 64 bit machine the pointer variable has 8 bytes.
+    
+    // malloc returns a void* so there is a cast necessary to make it work. You need to tell the c compiler what type you want the bytes to be.
+    int *ptr = (int *) malloc (sizeof(int));
+    *ptr = 42; //dereferencing ptr to store the value 42 in that heap-allocated space
+    
+    printf("%p\n", (void *) &ptr); // Address of the pointer variable is in the stack (same location each time)
+    printf("%p\n", (void *) ptr); // Address lower down, so the address held in ptr is in the heap? (diff each time)
+    printf("%d\n", *ptr); // prints 0x2a because hex for 42, why error of void * from smaller int?
+    
+    int *otherPtr = (int *) malloc (sizeof(int));
+    *otherPtr = 41;
+    
+    printf("%p address of the otherPtr variable\n", &otherPtr);
+    printf("%p address that the otherPtr is pointing to\n", otherPtr);
+    
+    int *finalPtr; // This declares the pointer variable finalPtr, which has garabage at this location in the stack.
+    printf("%p address finalPtr in point to\n", finalPtr);
+    
+    finalPtr = (int *) malloc (sizeof(int));
+    
+    printf("%d is the value at the location\n", *finalPtr);
+    
+    *finalPtr = 40; // This would set the value at some random address to 40. This seems really bad.
+    
+    printf("%d is the value at the location after dereferencing\n", *finalPtr);
+    
+    // The pointer is on the stack and has an address that is high. The ptr value is the address of what variable or where in memory a given value is located. Dereferencing the ptr really just follows the pointer to the address it is pointing to and return that value.
+    
+//    int *null = NULL;
+//    printf("%d", *null);
+    
+    printf("%p\n", &array);
+    
+    // the List pointer variable list is only pointing to a NULL value
+    List list = ListNew();
+    
+    // This set of imperative code is assigning an address that was called in a subroutine that is then returned. The value is maintained but the location in memory of the address is overwritten when the printf function is called.
+    int *stackAddress, content;
+    stackAddress = getAddress();
+    content = *stackAddress;
+    printf("%d\n", content);
+    content = *stackAddress;
+    printf("%d\n", content);
+    
+    // notes that the address in the heap can be shared from other procedures in the program so if malloc and free have a certain defined address location, then the pointer should be freed or malloced in the same procedure. Malloc is in the heap even thought the pointer is in the stack. The pointer in the stack is ther variable and the malloc is a procedure that runs and allocates where in the heap is large enough and free that can have that pointer point to a given address in the heap. The reallocate will again have a look up table for the given defined address. If the address is changed then that is a problem if not dealt with appropriately.
     
     return 0;
 }
